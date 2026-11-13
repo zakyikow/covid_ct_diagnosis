@@ -28,16 +28,14 @@ It started with a short video by a tech content creator: a COVID-19 detector rea
 scans ([chrispathway/covid-ct-classifier](https://github.com/chrispathway/covid-ct-classifier)). I reproduced it and
 got the same 99%. But the dataset doesn't say which slices come from which patient, so the same patients end up in
 both the training and test sets. The project became: **how much of that 99% is real, and what does an honest version
-score?** The answer is a model tested on patients it never saw, giving one diagnosis per patient: **COVID-19**,
-**pneumonia** or **healthy**.
+score?**
 
 <p align="center">
   <a href="https://zakyikow.github.io/covid_ct_diagnosis/">
     <img src="assets/demo.gif" width="100%" alt="The demo page: patient P002 is read slice by slice and diagnosed with COVID-19 at 94%, then patient cap007 is dragged into the viewer and diagnosed with pneumonia at 96%, with heatmaps on the infected areas.">
   </a>
   <br>
-  <sub>The live demo: pick a patient, watch the model read the scan, then see its diagnosis and where it looked.
-  The results were computed in advance; nothing runs in the browser.</sub>
+  <sub>The live demo. Results computed in advance: nothing runs in the browser.</sub>
 </p>
 
 ## The story in four steps
@@ -55,18 +53,12 @@ score?** The answer is a model tested on patients it never saw, giving one diagn
   <img src="assets/split-light.png" width="100%" alt="Why a random split inflates the score. A CT scan is a stack of 100 to 200 near-identical slices. With a random split, slices of every patient land in both training and test, so the model can recognise the patient: 96% balanced accuracy on Tehran slices. Split by patient, each patient is only in training or only in test: 77% with the same data and model.">
 </picture>
 
-The Wuhan dataset has no patient IDs, so its leak can't be measured directly. Step 3a measures it on the Tehran
-dataset, which has them.
-
 > **Balanced accuracy:** the share found correctly for each class, averaged, so a rare class counts as much as a
 > common one. Plain accuracy hides failures on rare classes: in step 3a, 79% of the slices show no infection.<br>
 > **AUROC:** the chance that a random case of one group scores higher than a random case of the other. 0.5 is a
 > coin flip, 1 is perfect.
 
 ## Results
-
-Every patient below is tested by a model that never saw it in training (5-fold cross-validation by patient, see
-[how it works](#how-it-works)).
 
 ### 3a. The leak, measured
 
@@ -108,8 +100,6 @@ Every patient below is tested by a model that never saw it in training (5-fold c
   COVID-19, 85% pneumonia). The infection was found; the two can look alike on CT.
 - **The 17 read as healthy:** their most suspicious slices scored a median 33% for COVID-19, against 96% for the
   COVID-19 patients the model found: mostly mild cases, with little infection visible.
-- **The baseline comparison** uses the same scoring rule for both models (the mean of each patient's 10% most
-  suspicious slices). It is not a one-change experiment: the honest model was trained in Tehran and knows pneumonia.
 
 </details>
 
@@ -259,8 +249,6 @@ covid_ct_diagnosis/
 └── pyproject.toml             # Python package and dependencies
 ```
 
-Each numbered folder has its own short README.
-
 ## Limitations
 
 - **One site for the honest model.** Its 84% comes from patients of the same Tehran imaging centre it was trained
@@ -273,28 +261,27 @@ Each numbered folder has its own short README.
 - **Noisy slice labels.** Some slices labelled "no infection" show clear lesions. This affects training and the
   per-slice numbers, not the 84%, which is measured against each patient's recorded diagnosis.
 - **2D slices only.** Each slice is read on its own; the diagnosis only combines their scores.
+- **The Wuhan leak is not measured directly:** that dataset has no patient IDs, so step 3a measures the leak on the
+  Tehran data.
 
 ## Reproduce
 
-Needs macOS or Linux, Python 3.10+, a [Kaggle API token](https://www.kaggle.com/settings) saved in
-`~/.kaggle/access_token`, and about 30 GB of free disk space during step 0 (18 GB once the downloaded zip is
-deleted). The Apple GPU (MPS) or an NVIDIA GPU is used when present. Step 3 trains 10 models and is by far the
-longest step.
+- macOS or Linux, Python 3.10+
+- a [Kaggle API token](https://www.kaggle.com/settings) in `~/.kaggle/access_token`
+- about 30 GB free during step 0 (18 GB once the downloaded zip is deleted)
+- a GPU is optional: Apple or NVIDIA, used when present
 
 ```bash
 bash scripts/run.sh step0           # install, download (~14 GB), convert
 bash scripts/run.sh step1           # reproduce the 99% model
 bash scripts/run.sh step2           # test it on the Tehran patients
-bash scripts/run.sh step3_random    # 3a: random split, 5 folds
-bash scripts/run.sh step3_patient   # 3a + 3b: split by patient, 5 folds
+bash scripts/run.sh step3_random    # 3a: random split, 5 folds (long)
+bash scripts/run.sh step3_patient   # 3a + 3b: by patient, 5 folds (long)
 bash scripts/run.sh step4           # data of the 6 demo patients
 bash scripts/run.sh report          # every result in one table: results.md
 bash scripts/run.sh notebook        # open the data exploration notebook
 bash scripts/run.sh test            # automatic tests, no data needed
 ```
-
-Every step can be run again: finished parts are skipped, and an interrupted cross-validation resumes at the next
-fold.
 
 <details>
 <summary><b>Skip the training</b>: use the trained models from the release</summary>
@@ -326,8 +313,6 @@ npm run dev    # the page on a local address, reloaded on every change
 npm run build  # the finished page, in 4_demo/dist/
 ```
 
-It is published to GitHub Pages by `.github/workflows/deploy_demo.yaml` at every push to `main`.
-
 </details>
 
 ## Data and credits
@@ -338,8 +323,6 @@ It is published to GitHub Pages by `.github/workflows/deploy_demo.yaml` at every
 | **Tehran dataset** (COVID-CT-MD) | 305 full scans from 1 imaging centre in Tehran, **with patient IDs**. Used in steps 2 to 4. Licence: CC0 | [figshare](https://doi.org/10.6084/m9.figshare.12991592), [slice labels](https://github.com/ShahinSHH/COVID-CT-MD) |
 | **The original project** | the 99% classifier this project started from | [chrispathway/covid-ct-classifier](https://github.com/chrispathway/covid-ct-classifier) |
 | **An independent audit** | another look at the same baseline | [PopcornKitsilano/covid-ct-audit](https://github.com/PopcornKitsilano/covid-ct-audit) |
-
-The only scans stored here are slices of the 6 demo patients (COVID-CT-MD, CC0).
 
 <details>
 <summary><b>Papers</b></summary>
