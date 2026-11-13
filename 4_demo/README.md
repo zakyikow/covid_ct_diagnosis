@@ -32,7 +32,7 @@ Needs Node.js 22 or newer. From this folder:
 npm install      # once
 npm run dev      # the page on a local address, reloaded on every change
 npm run build    # the finished page, in dist/
-npm run preview  # the finished page on a local address, as it will be published
+npm run preview  # the finished page, as it will be published
 ```
 
 At every push to `main`, GitHub builds the page and publishes it on GitHub Pages.

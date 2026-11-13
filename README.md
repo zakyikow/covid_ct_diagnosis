@@ -238,16 +238,26 @@ vs. pneumonia 0.54, vs. both 0.74.
 
 ## Project structure
 
-| Folder | What's inside |
-|---|---|
-| [`0_data/`](0_data/) | data card, and a notebook to explore both datasets |
-| [`1_reproduce_baseline/`](1_reproduce_baseline/) | step 1: the 99% baseline |
-| [`2_other_hospital_test/`](2_other_hospital_test/) | step 2: the baseline tested in Tehran |
-| [`3_honest_model/`](3_honest_model/) | steps 3a and 3b: random split vs. split by patient (the leak), and the honest model |
-| [`4_demo/`](4_demo/) | step 4: the demo page and its data |
-| [`src/covid_ct_diagnosis/`](src/covid_ct_diagnosis/) | the code shared by every step |
-| [`scripts/`](scripts/) | one command per step |
-| [`tests/`](tests/) | 28 automatic tests, run on GitHub at every push: folds, no leakage, metrics, a tiny full run |
+```text
+covid_ct_diagnosis/
+│
+├── 0_data/                    # data card and exploration notebook
+├── 1_reproduce_baseline/      # step 1: the 99% baseline
+├── 2_other_hospital_test/     # step 2: the baseline tested in Tehran
+├── 3_honest_model/            # steps 3a and 3b
+│   ├── random_split.yaml      # slices shuffled at random: the leak
+│   ├── patient_split.yaml     # split by patient: the honest model
+│   └── results/               # metrics, plots and every fold of both
+├── 4_demo/                    # step 4: the demo page and its data
+│
+├── src/covid_ct_diagnosis/    # the Python code behind every step
+├── scripts/                   # run.sh: one command per step
+├── tests/                     # 28 automatic tests
+│
+├── .github/workflows/         # tests and demo deployment at every push
+├── assets/                    # images of this README
+└── pyproject.toml             # Python package and dependencies
+```
 
 Each numbered folder has its own short README.
 
@@ -272,14 +282,14 @@ deleted). The Apple GPU (MPS) or an NVIDIA GPU is used when present. Step 3 trai
 longest step.
 
 ```bash
-bash scripts/run.sh step0           # install, download both datasets (~14 GB), convert them
+bash scripts/run.sh step0           # install, download (~14 GB), convert
 bash scripts/run.sh step1           # reproduce the 99% model
 bash scripts/run.sh step2           # test it on the Tehran patients
-bash scripts/run.sh step3_random    # 3a: Tehran, random split, 5-fold cross-validation
-bash scripts/run.sh step3_patient   # 3a + 3b: Tehran, split by patient: the honest model
-bash scripts/run.sh step4           # demo data: 6 patients, each through its own fold's model
-bash scripts/run.sh report          # one table with every result, in results.md
-bash scripts/run.sh notebook        # open the notebook that explores both datasets
+bash scripts/run.sh step3_random    # 3a: random split, 5 folds
+bash scripts/run.sh step3_patient   # 3a + 3b: split by patient, 5 folds
+bash scripts/run.sh step4           # data of the 6 demo patients
+bash scripts/run.sh report          # every result in one table: results.md
+bash scripts/run.sh notebook        # open the data exploration notebook
 bash scripts/run.sh test            # automatic tests, no data needed
 ```
 
