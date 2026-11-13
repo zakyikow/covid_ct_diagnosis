@@ -7,7 +7,11 @@
   </picture>
 </a>
 
-<br><br>
+</div>
+
+<br>
+
+<div align="center">
 
 <a href="https://zakyikow.github.io/covid_ct_diagnosis/">
   <picture>
