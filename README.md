@@ -7,28 +7,25 @@
   </picture>
 </a>
 
-[![Live demo](https://img.shields.io/badge/live_demo-open-E8590C?style=flat-square&labelColor=18181B)](https://zakyikow.github.io/covid_ct_diagnosis/)
-[![Tests](https://img.shields.io/github/actions/workflow/status/zakyikow/covid_ct_diagnosis/tests.yaml?branch=main&style=flat-square&label=tests&labelColor=18181B)](https://github.com/zakyikow/covid_ct_diagnosis/actions/workflows/tests.yaml)
-![Python](https://img.shields.io/badge/python-3.10%2B-F2F1EC?style=flat-square&labelColor=18181B)
-![PyTorch](https://img.shields.io/badge/pytorch-MobileNetV3-F2F1EC?style=flat-square&labelColor=18181B)
-![Demo stack](https://img.shields.io/badge/demo-React_%2B_TypeScript-F2F1EC?style=flat-square&labelColor=18181B)
+<br><br>
 
-**[Try the live demo](https://zakyikow.github.io/covid_ct_diagnosis/)** &nbsp;·&nbsp;
-[Story](#the-story-in-four-steps) ·
-[Results](#results) ·
-[How it works](#how-it-works) ·
-[Structure](#project-structure) ·
-[Limitations](#limitations) ·
-[Reproduce](#reproduce)
+<a href="https://zakyikow.github.io/covid_ct_diagnosis/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/button-dark.png">
+    <img src="assets/button-light.png" width="263" alt="Try the live demo">
+  </picture>
+</a>
 
 </div>
 
 <br>
 
-Chest CT classifiers trained on a popular public dataset often report about **99% accuracy**. This project
-reproduces one, tests it on patients from another hospital, measures how much of the 99% comes from a data leak,
-then rebuilds the model honestly: each patient is either in training or in test, never both, and the model gives
-one diagnosis per patient (**COVID-19**, **pneumonia** or **healthy**).
+It started with a short video by a tech content creator: a COVID-19 detector reaching 99% accuracy on chest CT
+scans ([chrispathway/covid-ct-classifier](https://github.com/chrispathway/covid-ct-classifier)). I reproduced it and
+got the same 99%. But the dataset doesn't say which slices come from which patient, so the same patients end up in
+both the training and test sets. The project became: **how much of that 99% is real, and what does an honest version
+score?** The answer is a model tested on patients it never saw, giving one diagnosis per patient: **COVID-19**,
+**pneumonia** or **healthy**.
 
 <p align="center">
   <a href="https://zakyikow.github.io/covid_ct_diagnosis/">
@@ -47,15 +44,15 @@ one diagnosis per patient (**COVID-19**, **pneumonia** or **healthy**).
 | **2. Another hospital**<br>[`2_other_hospital_test/`](2_other_hospital_test/) | Does it still work on 305 patients from an imaging centre in Tehran? | No. It misses 1,824 of the 3,815 slices that radiologists marked as COVID-19, and it can't tell a COVID-19 lesion from a pneumonia lesion (AUROC 0.46, a coin flip). | **48%**<br>of COVID-19 slices missed |
 | **3a. The leak**<br>[`3_honest_model/`](3_honest_model/) | How much of the score is the leak? | Same Tehran data, same model, same settings; only the split changes. Slices shuffled at random: 96%. Split by patient: 77%. | **−19 points**<br>balanced accuracy per slice |
 | **3b. The honest model**<br>[`3_honest_model/`](3_honest_model/) | What is the real score, per patient? | One diagnosis per scan for all 305 Tehran patients, each judged by a model that never saw it in training. | **84%**<br>balanced accuracy per patient (95% CI 80–88%) |
-| **4. The demo**<br>[`4_demo/`](4_demo/) | Can anyone see the honest model at work? | A web page where 6 Tehran patients are read and diagnosed, each by the model that never saw them. | **[Live demo](https://zakyikow.github.io/covid_ct_diagnosis/)** |
+| **4. The demo**<br>[`4_demo/`](4_demo/) | Can anyone see the honest model at work? | A React + TypeScript page where 6 Tehran patients are read and diagnosed, each by the model that never saw them. | **[Live demo](https://zakyikow.github.io/covid_ct_diagnosis/)** |
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/split-dark.png">
   <img src="assets/split-light.png" width="100%" alt="Why a random split inflates the score. A CT scan is a stack of 100 to 200 near-identical slices. With a random split, slices of every patient land in both training and test, so the model can recognise the patient: 96% balanced accuracy on Tehran slices. Split by patient, each patient is only in training or only in test: 77% with the same data and model.">
 </picture>
 
-The Wuhan dataset doesn't say which slices come from which patient, so its leak can't be measured directly. Step 3a
-measures it on the Tehran dataset, which has patient IDs.
+The Wuhan dataset has no patient IDs, so its leak can't be measured directly. Step 3a measures it on the Tehran
+dataset, which has them.
 
 > **Balanced accuracy:** the share found correctly for each class, averaged, so a rare class counts as much as a
 > common one. Plain accuracy hides failures on rare classes: in step 3a, 79% of the slices show no infection.<br>
@@ -80,33 +77,37 @@ Every patient below is tested by a model that never saw it in training (5-fold c
 
 ### 3b. The honest model, patient by patient
 
-| True diagnosis | Patients | Found | Rate |
-|---|---:|---:|---:|
-| COVID-19 | 169 | 130 | 77% |
-| Pneumonia | 60 | 46 | 77% |
-| Healthy | 76 | 75 | **99%** |
-| **Balanced accuracy** | **305** | | **84%** (95% CI 80–88%) |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/patients-dark.png">
+  <img src="assets/patients-light.png" width="100%" alt="All 305 Tehran patients, one square each, coloured by the model's answer. Balanced accuracy 84%, 95% confidence interval 80 to 88%. COVID-19, 169 patients: 130 right (77%), 22 read as pneumonia, 17 read as healthy. Pneumonia, 60 patients: 46 right (77%), 10 read as COVID-19, 4 read as healthy. Healthy, 76 patients: 75 right (99%), 1 flagged as COVID-19.">
+</picture>
 
-<table>
-<tr><th align="left">True ↓ &nbsp; Model says →</th><th align="right">COVID-19</th><th align="right">Pneumonia</th><th align="right">Healthy</th></tr>
-<tr><td><b>COVID-19</b> (169)</td><td align="right"><b>130</b></td><td align="right">22</td><td align="right">17</td></tr>
-<tr><td><b>Pneumonia</b> (60)</td><td align="right">10</td><td align="right"><b>46</b></td><td align="right">4</td></tr>
-<tr><td><b>Healthy</b> (76)</td><td align="right">1</td><td align="right">0</td><td align="right"><b>75</b></td></tr>
-<tr><td><i>Right when it says so</i></td><td align="right"><i>92%</i></td><td align="right"><i>68%</i></td><td align="right"><i>78%</i></td></tr>
-</table>
-
-- **Healthy people are almost never flagged:** 75 of 76.
-- **Most mistakes are COVID-19 patients** (39 of the 54):
-  - **22 read as pneumonia:** the model found the infection but took it for the other kind, which can look alike
-    on CT. Their most suspicious slices scored high for both (median 82% COVID-19, 85% pneumonia).
-  - **17 read as healthy:** mostly mild cases. Their most suspicious slices scored a median 33% for COVID-19,
-    against 96% for the COVID-19 patients it found.
-- **Its percentages mean what they say:** 83% sure on average, right for 82% of patients.
+- **Its percentages mean what they say:** it is 83% sure on average, and right for 82% of patients.
 - **Screening setting:** with a lower cut-off chosen on validation patients, it catches **158 of 169** COVID-19
   patients (93%), with 38 false alarms among the 136 others (28%).
-- **Much better than the baseline on the same 305 patients:** COVID-19 vs. pneumonia AUROC 0.54 → 0.83, with the
-  same scoring rule for both. Not a one-change comparison: the honest model was trained in Tehran and knows
-  pneumonia.
+- **Far better than the baseline on the same 305 patients:** COVID-19 vs. pneumonia AUROC 0.54 → 0.83.
+
+<details>
+<summary><b>Exact numbers</b>: confusion matrix, and what the mistakes look like</summary>
+
+<br>
+
+<table>
+<tr><th align="left">True ↓ &nbsp; Model says →</th><th align="right">COVID-19</th><th align="right">Pneumonia</th><th align="right">Healthy</th><th align="right">Found</th></tr>
+<tr><td><b>COVID-19</b> (169)</td><td align="right"><b>130</b></td><td align="right">22</td><td align="right">17</td><td align="right">77%</td></tr>
+<tr><td><b>Pneumonia</b> (60)</td><td align="right">10</td><td align="right"><b>46</b></td><td align="right">4</td><td align="right">77%</td></tr>
+<tr><td><b>Healthy</b> (76)</td><td align="right">1</td><td align="right">0</td><td align="right"><b>75</b></td><td align="right">99%</td></tr>
+<tr><td><i>Right when it says so</i></td><td align="right"><i>92%</i></td><td align="right"><i>68%</i></td><td align="right"><i>78%</i></td><td></td></tr>
+</table>
+
+- **The 22 COVID-19 patients read as pneumonia:** their most suspicious slices scored high for both (median 82%
+  COVID-19, 85% pneumonia). The infection was found; the two can look alike on CT.
+- **The 17 read as healthy:** their most suspicious slices scored a median 33% for COVID-19, against 96% for the
+  COVID-19 patients the model found: mostly mild cases, with little infection visible.
+- **The baseline comparison** uses the same scoring rule for both models (the mean of each patient's 10% most
+  suspicious slices). It is not a one-change experiment: the honest model was trained in Tehran and knows pneumonia.
+
+</details>
 
 ### Heatmaps
 
@@ -178,8 +179,18 @@ vs. pneumonia 0.54, vs. both 0.74.
 ## How it works
 
 <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/cnn-dark.png">
+  <img src="assets/cnn-light.png" width="100%" alt="What a CNN does with one slice, with real outputs of the trained model on slice 104 of patient P002. The 224 by 224 slice goes through early layers (16 maps of 112 by 112: edges and outlines), middle layers (40 maps of 28 by 28: textures and shapes) and last layers (960 maps of 7 by 7, which light up where the infection is). They are averaged and combined into 1,280 numbers, and a final dense layer gives 3 scores: COVID-19 lesion over 99%, pneumonia lesion and no infection under 1%.">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/transfer-dark.png">
+  <img src="assets/transfer-light.png" width="100%" alt="Transfer learning in 3 steps. 1: MobileNetV3-Large, pretrained on ImageNet (1.28 million everyday photos, 1,000 kinds of objects), with 4.2 million weights in its feature layers and 1.28 million in its last layer. 2: the last layer is replaced by a new dense layer with 3 outputs (no infection, COVID-19 lesion, pneumonia lesion), 3,843 weights starting from random values. 3: every layer is fine-tuned on the labelled CT slices for up to 15 epochs, keeping the epoch that scores best on validation patients. This is also how the original 99% model was built; what this project changes is how it is tested.">
+</picture>
+
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/pipeline-dark.png">
-  <img src="assets/pipeline-light.png" width="100%" alt="How the model diagnoses a patient, with patient P002. 1: a CNN (MobileNetV3) gives every slice 3 scores; slice 104 scores over 99% COVID-19, with a Grad-CAM heatmap on the lesion. 2: along the scan, the 10% most suspicious slices are averaged, for COVID-19 and for pneumonia. 3: a small logistic regression turns the two averages into calibrated percentages: COVID-19 94%, pneumonia 3%, healthy 3%. Correct.">
+  <img src="assets/pipeline-light.png" width="100%" alt="How the model diagnoses a patient, with patient P002. 1: the CNN gives every slice 3 scores; slice 104 scores over 99% COVID-19, with a Grad-CAM heatmap on the lesion. 2: along the scan, the 10% most suspicious slices are averaged, for COVID-19 and for pneumonia. 3: a small logistic regression turns the two averages into calibrated percentages: COVID-19 94%, pneumonia 3%, healthy 3%. Correct.">
 </picture>
 
 <picture>
@@ -192,10 +203,11 @@ vs. pneumonia 0.54, vs. both 0.74.
 
 <br>
 
-- **Images:** 256 px grayscale. The Tehran DICOM scans are converted to Hounsfield units and shown with a lung
-  window (centre −600, width 1500). Details in the [data card](0_data/README.md).
-- **Model:** MobileNetV3-Large pretrained on ImageNet (`timm`), 3 classes per slice: no infection, COVID-19 lesion,
-  pneumonia lesion.
+- **Images:** 256 px grayscale, copied to the 3 colour channels the pretrained model expects. The Tehran DICOM
+  scans are converted to Hounsfield units and shown with a lung window (centre −600, width 1500). Details in the
+  [data card](0_data/README.md).
+- **Model:** MobileNetV3-Large (`mobilenetv3_large_100` in `timm`), ImageNet weights, last layer replaced by a
+  3-output dense layer: 4.2 million weights in total, all fine-tuned.
 - **Training:** random 224 px crops, flips, ±10° rotations, ±20% brightness and contrast. AdamW (learning rate 3e-4,
   weight decay 0.05), warm-up then cosine decay, class-weighted cross-entropy with label smoothing 0.05, up to 15
   epochs, keeping the epoch with the best validation balanced accuracy.
@@ -210,6 +222,16 @@ vs. pneumonia 0.54, vs. both 0.74.
 
 </details>
 
+## Tech stack
+
+| Area | Tools |
+|---|---|
+| Model and training | Python, PyTorch, timm (MobileNetV3, transfer learning) |
+| Data | pydicom, NumPy, pandas, Pillow |
+| Evaluation | scikit-learn, Grad-CAM, matplotlib |
+| Demo page | React, TypeScript, Vite, Tailwind CSS, Motion |
+| Quality and hosting | pytest, ruff, GitHub Actions, GitHub Pages |
+
 ## Project structure
 
 | Folder | What's inside |
@@ -221,12 +243,9 @@ vs. pneumonia 0.54, vs. both 0.74.
 | [`4_demo/`](4_demo/) | step 4: the demo page and its data |
 | [`src/covid_ct_diagnosis/`](src/covid_ct_diagnosis/) | the code shared by every step |
 | [`scripts/`](scripts/) | one command per step |
-| [`tests/`](tests/) | 28 automatic tests: folds, no leakage, metrics, a tiny full run |
+| [`tests/`](tests/) | 28 automatic tests, run on GitHub at every push: folds, no leakage, metrics, a tiny full run |
 
 Each numbered folder has its own short README.
-
-**Built with:** Python, PyTorch, timm, scikit-learn, pandas, pydicom, matplotlib, pytest, ruff · React, TypeScript,
-Vite, Tailwind CSS, Motion · GitHub Actions and GitHub Pages.
 
 ## Limitations
 
@@ -263,9 +282,13 @@ bash scripts/run.sh test            # automatic tests, no data needed
 Every step can be run again: finished parts are skipped, and an interrupted cross-validation resumes at the next
 fold.
 
-**Skip the training.** The [release](https://github.com/zakyikow/covid_ct_diagnosis/releases) holds the 5 trained
-fold models of the honest model with their predictions. After step 0, unzip them into
-`3_honest_model/results/patient_split/` to run step 4 or the Grad-CAM figure without training:
+<details>
+<summary><b>Skip the training</b>: use the trained models from the release</summary>
+
+<br>
+
+The [release](https://github.com/zakyikow/covid_ct_diagnosis/releases) holds the 5 trained fold models of the honest
+model with their predictions. After step 0, unzip them to run step 4 or the Grad-CAM figure without training:
 
 ```bash
 unzip honest_model.zip -d 3_honest_model/results/patient_split/
@@ -274,7 +297,14 @@ bash scripts/run.sh step4
     --model-dir 3_honest_model/results/patient_split
 ```
 
-**The demo page** needs Node.js 22 or newer. From `4_demo/`:
+</details>
+
+<details>
+<summary><b>Run the demo page locally</b></summary>
+
+<br>
+
+Needs Node.js 22 or newer. From `4_demo/`:
 
 ```bash
 npm install    # once
@@ -284,32 +314,30 @@ npm run build  # the finished page, in 4_demo/dist/
 
 It is published to GitHub Pages by `.github/workflows/deploy_demo.yaml` at every push to `main`.
 
+</details>
+
 ## Data and credits
 
-| | Wuhan dataset (iCTCF) | Tehran dataset (COVID-CT-MD) |
+| Source | What it is | Link |
 |---|---|---|
-| Source | 2 hospitals in Wuhan, China | 1 imaging centre in Tehran, Iran (one scanner) |
-| Content | 19,685 single slices | 305 full scans (45,471 slices): 169 COVID-19, 60 pneumonia, 76 healthy |
-| Patient IDs | **no** (about 104 patients) | **yes** |
-| Used in | step 1 | steps 2, 3 and 4 |
+| **Wuhan dataset** (iCTCF) | 19,685 CT slices from 2 hospitals in Wuhan, **no patient IDs**. Used in step 1. Licence: CC BY 4.0 | [Kaggle](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19) |
+| **Tehran dataset** (COVID-CT-MD) | 305 full scans from 1 imaging centre in Tehran, **with patient IDs**. Used in steps 2 to 4. Licence: CC0 | [figshare](https://doi.org/10.6084/m9.figshare.12991592), [slice labels](https://github.com/ShahinSHH/COVID-CT-MD) |
+| **The original project** | the 99% classifier this project started from | [chrispathway/covid-ct-classifier](https://github.com/chrispathway/covid-ct-classifier) |
+| **An independent audit** | another look at the same baseline | [PopcornKitsilano/covid-ct-audit](https://github.com/PopcornKitsilano/covid-ct-audit) |
 
-- **Wuhan (iCTCF):** Ning W. et al., *Open resource of clinical data from patients with pneumonia for the prediction
-  of COVID-19 outcomes via deep learning*, Nature Biomedical Engineering, 2020. Used through the Kaggle dataset
-  [`azaemon/preprocessed-ct-scans-for-covid19`](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19)
-  (CC BY 4.0).
-- **Tehran (COVID-CT-MD):** Afshar P. et al., *COVID-CT-MD, COVID-19 computed tomography scan dataset applicable in
-  machine learning and deep learning*, Scientific Data, 2021. Scans from
-  [figshare](https://doi.org/10.6084/m9.figshare.12991592) (CC0), slice labels from
-  [ShahinSHH/COVID-CT-MD](https://github.com/ShahinSHH/COVID-CT-MD).
-- **The baseline** follows the approach of
-  [chrispathway/covid-ct-classifier](https://github.com/chrispathway/covid-ct-classifier). Many public projects on
-  this dataset report the same ~99%: the issue comes from the dataset having no patient IDs, not from any one
-  project.
-- **An independent audit** of the same baseline:
-  [PopcornKitsilano/covid-ct-audit](https://github.com/PopcornKitsilano/covid-ct-audit).
+The only scans stored here are slices of the 6 demo patients (COVID-CT-MD, CC0).
 
-No scans are stored in this repository, except slices of the 6 demo patients, in `4_demo/public/data/` and in the
-README images (COVID-CT-MD, CC0).
+<details>
+<summary><b>Papers</b></summary>
+
+<br>
+
+- Ning W. et al., *Open resource of clinical data from patients with pneumonia for the prediction of COVID-19
+  outcomes via deep learning*, Nature Biomedical Engineering, 2020.
+- Afshar P. et al., *COVID-CT-MD, COVID-19 computed tomography scan dataset applicable in machine learning and deep
+  learning*, Scientific Data, 2021.
+
+</details>
 
 <br>
 
