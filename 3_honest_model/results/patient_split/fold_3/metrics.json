@@ -1,0 +1,232 @@
+{
+  "name": "patient_split / fold 3",
+  "split": "group",
+  "temperature": 0.8273704484626769,
+  "covid_threshold_from_val": 0.03022722250798355,
+  "test_slices": {
+    "all_classes": {
+      "n": 4676,
+      "accuracy": 0.9076133447390933,
+      "balanced_accuracy": 0.7529967926988305,
+      "per_class": {
+        "no_lesion": {
+          "sensitivity": 0.9641499185225421,
+          "precision": 0.940646528881823,
+          "support": 3682
+        },
+        "covid": {
+          "sensitivity": 0.7350318471337579,
+          "precision": 0.8374455732946299,
+          "support": 785
+        },
+        "cap": {
+          "sensitivity": 0.5598086124401914,
+          "precision": 0.5492957746478874,
+          "support": 209
+        }
+      },
+      "confusion_matrix": [
+        [
+          3550,
+          87,
+          45
+        ],
+        [
+          157,
+          577,
+          51
+        ],
+        [
+          67,
+          25,
+          117
+        ]
+      ],
+      "calibration_error": 0.059653665653069274,
+      "macro_auroc": 0.9382857163713446,
+      "calibration_error_after_scaling": 0.02361338231751836,
+      "balanced_accuracy_ci95": [
+        0.6306685310059251,
+        0.825398199196422
+      ]
+    },
+    "covid_yes_no": {
+      "at_0.5": {
+        "n": 4676,
+        "n_covid": 785,
+        "threshold": 0.5,
+        "accuracy": 0.9358426005132592,
+        "sensitivity": 0.7261146496815286,
+        "specificity": 0.9781547160113081,
+        "ppv": 0.8702290076335878,
+        "npv": 0.9465307137527978,
+        "confusion": {
+          "tp": 570,
+          "fn": 215,
+          "fp": 85,
+          "tn": 3806
+        },
+        "auroc": 0.9369022421495301,
+        "sensitivity_at_95_specificity": 0.8012738853503185
+      },
+      "at_val_threshold": {
+        "n": 4676,
+        "n_covid": 785,
+        "threshold": 0.03022722250798355,
+        "accuracy": 0.5203165098374679,
+        "sensitivity": 0.9796178343949045,
+        "specificity": 0.4276535594962734,
+        "ppv": 0.256675567423231,
+        "npv": 0.9904761904761905,
+        "confusion": {
+          "tp": 769,
+          "fn": 16,
+          "fp": 2227,
+          "tn": 1664
+        },
+        "auroc": 0.9369022421495301,
+        "sensitivity_at_95_specificity": 0.8012738853503185
+      },
+      "auroc_ci95": [
+        0.889825496087565,
+        0.9652214310609863
+      ]
+    }
+  },
+  "test_patients": {
+    "n_val_patients": 61,
+    "n_test_patients": 61,
+    "rule": {
+      "auroc_covid_vs_rest": 0.900871459694989,
+      "auroc_covid_vs_cap": 0.803921568627451,
+      "auroc_covid_vs_normal": 0.9784313725490197
+    },
+    "calibration": {
+      "temperature": 0.4621630393198332,
+      "error_before": 0.19780463084213884,
+      "error_after": 0.04177060115783517
+    },
+    "diagnosis": {
+      "n": 61,
+      "accuracy": 0.819672131147541,
+      "balanced_accuracy": 0.8382352941176471,
+      "per_class": {
+        "CAP": {
+          "sensitivity": 0.75,
+          "precision": 0.6923076923076923,
+          "support": 12
+        },
+        "COVID-19": {
+          "sensitivity": 0.7647058823529411,
+          "precision": 0.896551724137931,
+          "support": 34
+        },
+        "Normal": {
+          "sensitivity": 1.0,
+          "precision": 0.7894736842105263,
+          "support": 15
+        }
+      },
+      "confusion_matrix": [
+        [
+          9,
+          3,
+          0
+        ],
+        [
+          4,
+          26,
+          4
+        ],
+        [
+          0,
+          0,
+          15
+        ]
+      ],
+      "calibration_error": 0.04177060115783517,
+      "macro_auroc": 0.939024402031344,
+      "balanced_accuracy_ci95": [
+        0.7301039956212371,
+        0.9279279279279279
+      ]
+    },
+    "covid_yes_no": {
+      "at_0.5": {
+        "n": 61,
+        "n_covid": 34,
+        "threshold": 0.5,
+        "accuracy": 0.819672131147541,
+        "sensitivity": 0.7647058823529411,
+        "specificity": 0.8888888888888888,
+        "ppv": 0.896551724137931,
+        "npv": 0.75,
+        "confusion": {
+          "tp": 26,
+          "fn": 8,
+          "fp": 3,
+          "tn": 24
+        },
+        "auroc": 0.9183006535947713,
+        "sensitivity_at_95_specificity": 0.5588235294117647
+      },
+      "at_val_threshold": {
+        "n": 61,
+        "n_covid": 34,
+        "threshold": 0.17268060723889234,
+        "accuracy": 0.8524590163934426,
+        "sensitivity": 0.8823529411764706,
+        "specificity": 0.8148148148148148,
+        "ppv": 0.8571428571428571,
+        "npv": 0.8461538461538461,
+        "confusion": {
+          "tp": 30,
+          "fn": 4,
+          "fp": 5,
+          "tn": 22
+        },
+        "auroc": 0.9183006535947713,
+        "sensitivity_at_95_specificity": 0.5588235294117647
+      },
+      "auroc_ci95": [
+        0.8309490455665025,
+        0.9795309587604846
+      ],
+      "auroc_covid_vs_rest": 0.9183006535947713,
+      "auroc_covid_vs_cap": 0.8431372549019608,
+      "auroc_covid_vs_normal": 0.9784313725490197
+    },
+    "combiner": {
+      "features": [
+        "topk_covid",
+        "topk_cap"
+      ],
+      "diagnoses": [
+        "CAP",
+        "COVID-19",
+        "Normal"
+      ],
+      "coef": [
+        [
+          -0.3053948054698039,
+          1.951047735346732
+        ],
+        [
+          2.2114620759040435,
+          -0.29074216554606974
+        ],
+        [
+          -1.9060672704342392,
+          -1.6603055698006612
+        ]
+      ],
+      "intercept": [
+        -0.45221824535390887,
+        -1.0669602585313342,
+        1.5191785038852543
+      ],
+      "temperature": 0.4621630393198332,
+      "covid_threshold": 0.17268060723889234
+    }
+  }
+}

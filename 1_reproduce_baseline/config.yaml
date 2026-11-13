@@ -1,0 +1,45 @@
+# Step 1: reproduce the popular ~99% baseline.
+# MobileNetV3 on the Wuhan dataset (iCTCF) with a RANDOM slice split, as most public projects do.
+# Expect about 99%. Slices of the same patient end up in train and test, so this score is too optimistic.
+
+name: baseline
+seed: 42
+output_dir: 1_reproduce_baseline/results
+
+data:
+  index: 0_data/processed/ictcf/index.csv
+  split: random
+  fractions: [0.7, 0.15, 0.15]
+  img_size: 224
+
+# nCT = normal, NiCT = non-informative (no lungs visible), pCT = COVID
+classes: [nCT, NiCT, pCT]
+
+# The class whose probability is used as the "COVID score" when testing on the Tehran data
+positive_class: pCT
+
+model:
+  pretrained: true
+  drop_rate: 0.2
+
+augment:
+  crop_scale_min: 0.75
+  hflip: 0.5
+  rotate: 10
+  brightness: 0.2
+  contrast: 0.2
+
+train:
+  epochs: 10
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  label_smoothing: 0.0
+  class_weight_power: 0.5
+  patience: 4
+  num_workers: 4
+  # auto = NVIDIA GPU, then Apple GPU (MPS), then CPU
+  device: auto
+
+eval:
+  target_sensitivity: 0.95

@@ -1,0 +1,40 @@
+name: patient_split / fold 2
+seed: 42
+output_dir: 3_honest_model/results/patient_split/fold_2
+data:
+  index: 0_data/processed/ctmd/index.csv
+  split: group
+  cv_folds: 5
+  img_size: 224
+classes:
+- no_lesion
+- covid
+- cap
+positive_class: covid
+model:
+  pretrained: true
+  drop_rate: 0.2
+augment:
+  crop_scale_min: 0.75
+  hflip: 0.5
+  rotate: 10
+  brightness: 0.2
+  contrast: 0.2
+train:
+  epochs: 15
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  label_smoothing: 0.05
+  class_weight_power: 0.5
+  patience: 5
+  num_workers: 4
+  device: auto
+eval:
+  target_sensitivity: 0.95
+  background_class: no_lesion
+  patient_level:
+    enabled: true
+    topk_fraction: 0.1
+    target_sensitivity: 0.95
+fold: 2

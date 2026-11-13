@@ -1,0 +1,57 @@
+# Builds the demo page (4_demo/) and publishes it on GitHub Pages at every push to main.
+# Needs the repository setting Settings > Pages > Source: "GitHub Actions"
+name: deploy demo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Publishing to Pages needs these rights, and nothing more
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A newer push replaces a publication still in progress
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 4_demo
+    steps:
+      - uses: actions/checkout@v5
+
+      # Node 24 comes with npm 11, the version that wrote package-lock.json (npm 10 rejects it)
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: 4_demo/package-lock.json
+
+      # The exact package versions of package-lock.json, then the type check and the build
+      - name: Build the page
+        run: |
+          npm ci
+          npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: 4_demo/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

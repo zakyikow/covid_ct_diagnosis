@@ -1,0 +1,56 @@
+{
+  "name": "other_hospital_test / all_patients",
+  "model": "baseline",
+  "tested_on": "0_data/processed/ctmd/index.csv",
+  "query": null,
+  "slices": {
+    "covid_yes_no": {
+      "at_0.5": {
+        "n": 23349,
+        "n_covid": 3815,
+        "threshold": 0.5,
+        "accuracy": 0.8662897768641056,
+        "sensitivity": 0.5218872870249017,
+        "specificity": 0.9335517559127675,
+        "ppv": 0.6053511705685619,
+        "npv": 0.9090727816550349,
+        "confusion": {
+          "tp": 1991,
+          "fn": 1824,
+          "fp": 1298,
+          "tn": 18236
+        },
+        "auroc": 0.8510615962677436,
+        "sensitivity_at_95_specificity": 0.43853211009174314
+      },
+      "at_val_threshold": {
+        "n": 23349,
+        "n_covid": 3815,
+        "threshold": 0.43456183623556366,
+        "accuracy": 0.8663754336374149,
+        "sensitivity": 0.5287024901703801,
+        "specificity": 0.9323231289034504,
+        "ppv": 0.604073075771189,
+        "npv": 0.9101449275362319,
+        "confusion": {
+          "tp": 2017,
+          "fn": 1798,
+          "fp": 1322,
+          "tn": 18212
+        },
+        "auroc": 0.8510615962677436,
+        "sensitivity_at_95_specificity": 0.43853211009174314
+      },
+      "auroc_ci95": [
+        0.8076036428533628,
+        0.8924231780850322
+      ]
+    }
+  },
+  "patients": {
+    "n_patients": 305,
+    "auroc_covid_vs_rest": 0.7414288200487296,
+    "auroc_covid_vs_cap": 0.5387573964497042,
+    "auroc_covid_vs_normal": 0.9014325755216444
+  }
+}

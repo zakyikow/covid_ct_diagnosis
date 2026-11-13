@@ -1,0 +1,50 @@
+{
+  "name": "other_hospital_test / covid_vs_pneumonia_lesions",
+  "model": "baseline",
+  "tested_on": "0_data/processed/ctmd/index.csv",
+  "query": "label in ['covid', 'cap']",
+  "slices": {
+    "covid_yes_no": {
+      "at_0.5": {
+        "n": 4993,
+        "n_covid": 3815,
+        "threshold": 0.5,
+        "accuracy": 0.4960945323452834,
+        "sensitivity": 0.5218872870249017,
+        "specificity": 0.41256366723259763,
+        "ppv": 0.742079761461051,
+        "npv": 0.21038961038961038,
+        "confusion": {
+          "tp": 1991,
+          "fn": 1824,
+          "fp": 692,
+          "tn": 486
+        },
+        "auroc": 0.4581851195019214,
+        "sensitivity_at_95_specificity": 0.061598951507208385
+      },
+      "at_val_threshold": {
+        "n": 4993,
+        "n_covid": 3815,
+        "threshold": 0.43456183623556366,
+        "accuracy": 0.5001001401962748,
+        "sensitivity": 0.5287024901703801,
+        "specificity": 0.4074702886247878,
+        "ppv": 0.7429097605893186,
+        "npv": 0.21071115013169447,
+        "confusion": {
+          "tp": 2017,
+          "fn": 1798,
+          "fp": 698,
+          "tn": 480
+        },
+        "auroc": 0.4581851195019214,
+        "sensitivity_at_95_specificity": 0.061598951507208385
+      },
+      "auroc_ci95": [
+        0.3526416970334986,
+        0.5765979855520158
+      ]
+    }
+  }
+}

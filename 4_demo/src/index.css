@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/* The colours, fonts and corners of the approved design */
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --color-page: #faf9f6;
+  --color-card: #ffffff;
+  --color-line: #e2e0da;
+  --color-line-soft: #efede8;
+  --color-soft: #f2f1ec;
+  --color-track: #eceae4;
+  --color-ink: #18181b;
+  --color-text: #3f3f46;
+  --color-muted: #5b5b63;
+  --color-faded: #71717a;
+
+  --color-covid: #e8590c;
+  --color-covid-text: #c2410c;
+  --color-pneumonia: #2563eb;
+  --color-pneumonia-text: #1d4ed8;
+  --color-healthy: #71717a;
+  --color-healthy-text: #52525b;
+  --color-nothing: #d6d3cc;
+
+  --color-gap: #9a3412;
+  --color-gap-soft: #fdebdd;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* No word left alone on the last line of a paragraph, and titles split into lines of similar length */
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+body {
+  margin: 0;
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}

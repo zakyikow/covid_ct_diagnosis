@@ -1,0 +1,48 @@
+# Step 3, random split: the leaky twin of the honest model.
+# Exactly the same as patient_split.yaml, except the split: slices are shuffled at RANDOM, as most public projects
+# do, so the same patient appears in train and test. The gap between the two scores = how much leakage inflates results.
+# Both use the same 5-fold cross-validation; here a patient's slices are spread over all 5 folds.
+
+name: random_split
+seed: 42
+output_dir: 3_honest_model/results/random_split
+
+data:
+  index: 0_data/processed/ctmd/index.csv
+  split: random
+  # 5-fold cross-validation: 5 runs, each tested on a different fifth (fold) and validated on the next one,
+  # trained on the other three (60 / 20 / 20). Every slice is in the test set exactly once
+  cv_folds: 5
+  img_size: 224
+
+# no_lesion = no infection visible, covid = COVID lesion, cap = pneumonia lesion
+classes: [no_lesion, covid, cap]
+positive_class: covid
+
+model:
+  pretrained: true
+  drop_rate: 0.2
+
+augment:
+  crop_scale_min: 0.75
+  hflip: 0.5
+  rotate: 10
+  brightness: 0.2
+  contrast: 0.2
+
+train:
+  epochs: 15
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  label_smoothing: 0.05
+  class_weight_power: 0.5
+  patience: 5
+  num_workers: 4
+  device: auto
+
+# No patient-level diagnosis here: with a random split, every patient is partly in the test set
+eval:
+  target_sensitivity: 0.95
+  # Slices of this class show no infection; the other classes are lesions
+  background_class: no_lesion

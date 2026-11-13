@@ -1,0 +1,56 @@
+# Step 3, by-patient split: the honest model.
+# MobileNetV3 on the Tehran dataset (COVID-CT-MD), split BY PATIENT: each patient is entirely in train, val or test.
+# Its twin, random_split.yaml, is identical except for the split. The gap between the two = the leakage.
+# Both use the same 5-fold cross-validation, so every patient is tested once (all 305, the same as Step 2).
+#
+# Training uses every slice of the 76 normal patients plus the 79 COVID / pneumonia patients that radiologists
+# labelled slice by slice. The 150 other patients (115 COVID, 35 CAP) have no slice labels: when they fall in val
+# or test, they still count for the patient diagnosis, which is built from each patient's most suspicious slices.
+
+name: patient_split
+seed: 42
+output_dir: 3_honest_model/results/patient_split
+
+data:
+  index: 0_data/processed/ctmd/index.csv
+  split: group
+  # 5-fold cross-validation: 5 runs, each tested on a different fifth (fold) and validated on the next one,
+  # trained on the other three (60 / 20 / 20). Every patient is in the test set exactly once
+  cv_folds: 5
+  img_size: 224
+
+# no_lesion = no infection visible, covid = COVID lesion, cap = pneumonia lesion
+classes: [no_lesion, covid, cap]
+positive_class: covid
+
+model:
+  pretrained: true
+  drop_rate: 0.2
+
+augment:
+  crop_scale_min: 0.75
+  hflip: 0.5
+  rotate: 10
+  brightness: 0.2
+  contrast: 0.2
+
+train:
+  epochs: 15
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  label_smoothing: 0.05
+  class_weight_power: 0.5
+  patience: 5
+  num_workers: 4
+  device: auto
+
+eval:
+  target_sensitivity: 0.95
+  # Slices of this class show no infection; the other classes are lesions
+  background_class: no_lesion
+  patient_level:
+    enabled: true
+    # Patient score = mean of the 10% most suspicious slices (at least 3)
+    topk_fraction: 0.1
+    target_sensitivity: 0.95

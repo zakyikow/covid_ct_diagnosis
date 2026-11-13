@@ -1,0 +1,33 @@
+# Step 4: what the demo page shows.
+# `bash scripts/run.sh step4` runs each patient below through the model of its own fold (the one that never saw
+# it in training) and writes the results to output_dir. The page only replays them: nothing runs in the browser.
+
+cv_dir: 3_honest_model/results/patient_split
+index: 0_data/processed/ctmd/index.csv
+output_dir: 4_demo/public/data
+
+# The 6 demo patients: 2 COVID-19, 2 pneumonia, 1 healthy, and P021, a COVID-19 patient the model gets wrong
+patients: [P002, P114, cap007, cap040, normal056, P021]
+
+# Slice class that shows each diagnosis, used to pick the most suspicious slices. Healthy has none: its most
+# suspicious slices are the ones with the highest score of any lesion class
+diagnosis_classes:
+  COVID-19: covid
+  CAP: cap
+
+page:
+  # Bars of the score strip (each one covers a few slices), and number of most suspicious slices shown
+  bars: 40
+  top_slices: 5
+  # Size in pixels of the small images replayed while the scan is read, and how many per row in frames.webp
+  frame_size: 160
+  frame_columns: 8
+  image_quality: 80
+
+# Results shown in the story and results sections, read from each step's results
+summary:
+  step1: 1_reproduce_baseline/results/metrics.json
+  step1_index: 0_data/processed/ictcf/index.csv
+  step2: 2_other_hospital_test/results/all_patients/metrics.json
+  step3_random: 3_honest_model/results/random_split/metrics.json
+  step3_patient: 3_honest_model/results/patient_split/metrics.json

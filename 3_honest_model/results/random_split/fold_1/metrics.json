@@ -1,0 +1,96 @@
+{
+  "name": "random_split / fold 1",
+  "split": "random",
+  "temperature": 0.558990962272415,
+  "covid_threshold_from_val": 0.6187799546558566,
+  "test_slices": {
+    "all_classes": {
+      "n": 4670,
+      "accuracy": 0.9736616702355461,
+      "balanced_accuracy": 0.9705423154361621,
+      "per_class": {
+        "no_lesion": {
+          "sensitivity": 0.9754901960784313,
+          "precision": 0.9908713692946058,
+          "support": 3672
+        },
+        "covid": {
+          "sensitivity": 0.9659239842726082,
+          "precision": 0.9166666666666666,
+          "support": 763
+        },
+        "cap": {
+          "sensitivity": 0.9702127659574468,
+          "precision": 0.9083665338645418,
+          "support": 235
+        }
+      },
+      "confusion_matrix": [
+        [
+          3582,
+          67,
+          23
+        ],
+        [
+          26,
+          737,
+          0
+        ],
+        [
+          7,
+          0,
+          228
+        ]
+      ],
+      "calibration_error": 0.07590451694404839,
+      "macro_auroc": 0.9965495843703848,
+      "calibration_error_after_scaling": 0.008640667712734819,
+      "balanced_accuracy_ci95": [
+        0.9469465865697423,
+        0.9825691474542924
+      ]
+    },
+    "covid_yes_no": {
+      "at_0.5": {
+        "n": 4670,
+        "n_covid": 763,
+        "threshold": 0.5,
+        "accuracy": 0.9815845824411135,
+        "sensitivity": 0.963302752293578,
+        "specificity": 0.9851548502687484,
+        "ppv": 0.926860025220681,
+        "npv": 0.9927779210729946,
+        "confusion": {
+          "tp": 735,
+          "fn": 28,
+          "fp": 58,
+          "tn": 3849
+        },
+        "auroc": 0.9969701859182749,
+        "sensitivity_at_95_specificity": 0.9947575360419397
+      },
+      "at_val_threshold": {
+        "n": 4670,
+        "n_covid": 763,
+        "threshold": 0.6187799546558566,
+        "accuracy": 0.982441113490364,
+        "sensitivity": 0.9436435124508519,
+        "specificity": 0.9900179165600205,
+        "ppv": 0.9486166007905138,
+        "npv": 0.9890053694707236,
+        "confusion": {
+          "tp": 720,
+          "fn": 43,
+          "fp": 39,
+          "tn": 3868
+        },
+        "auroc": 0.9969701859182749,
+        "sensitivity_at_95_specificity": 0.9947575360419397
+      },
+      "auroc_ci95": [
+        0.9952911954420608,
+        0.9984764802479138
+      ]
+    }
+  }
+}

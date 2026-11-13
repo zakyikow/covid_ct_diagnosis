@@ -1,0 +1,28 @@
+# Data: too large for GitHub, and each dataset has its own licence
+0_data/raw/
+0_data/processed/
+
+# Model weights and prediction files: the honest model's are in the GitHub release instead
+*.pt
+**/results/**/preds*.csv
+
+# Private notes, plan and transcripts
+_private/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Web page (4_demo): installed packages and the built site, both recreated by npm
+node_modules/
+4_demo/dist/
+
+# macOS and editors
+.DS_Store
+.idea/
+.vscode/

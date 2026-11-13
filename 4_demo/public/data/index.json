@@ -1,0 +1,46 @@
+{
+  "patients": [
+    {
+      "id": "P002",
+      "diagnosis": "COVID-19",
+      "n_slices": 133,
+      "thumbnail": "P002/slice_104.webp",
+      "data": "P002/patient.json"
+    },
+    {
+      "id": "P114",
+      "diagnosis": "COVID-19",
+      "n_slices": 128,
+      "thumbnail": "P114/slice_72.webp",
+      "data": "P114/patient.json"
+    },
+    {
+      "id": "cap007",
+      "diagnosis": "CAP",
+      "n_slices": 159,
+      "thumbnail": "cap007/slice_64.webp",
+      "data": "cap007/patient.json"
+    },
+    {
+      "id": "cap040",
+      "diagnosis": "CAP",
+      "n_slices": 144,
+      "thumbnail": "cap040/slice_113.webp",
+      "data": "cap040/patient.json"
+    },
+    {
+      "id": "normal056",
+      "diagnosis": "Normal",
+      "n_slices": 148,
+      "thumbnail": "normal056/slice_95.webp",
+      "data": "normal056/patient.json"
+    },
+    {
+      "id": "P021",
+      "diagnosis": "COVID-19",
+      "n_slices": 163,
+      "thumbnail": "P021/slice_54.webp",
+      "data": "P021/patient.json"
+    }
+  ]
+}

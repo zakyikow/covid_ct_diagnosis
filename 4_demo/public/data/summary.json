@@ -1,0 +1,63 @@
+{
+  "step1": {
+    "accuracy": 0.993,
+    "n_slices": 19685
+  },
+  "step2": {
+    "covid_slices_missed": 0.478
+  },
+  "step3": {
+    "random_split": 0.964,
+    "patient_split": 0.77
+  },
+  "honest_model": {
+    "n_patients": 305,
+    "balanced_accuracy": 0.841,
+    "balanced_accuracy_ci95": [
+      0.799,
+      0.883
+    ],
+    "diagnoses": [
+      "CAP",
+      "COVID-19",
+      "Normal"
+    ],
+    "confusion_matrix": [
+      [
+        46,
+        10,
+        4
+      ],
+      [
+        22,
+        130,
+        17
+      ],
+      [
+        0,
+        1,
+        75
+      ]
+    ],
+    "per_diagnosis": {
+      "CAP": {
+        "patients": 60,
+        "correct": 46
+      },
+      "COVID-19": {
+        "patients": 169,
+        "correct": 130
+      },
+      "Normal": {
+        "patients": 76,
+        "correct": 75
+      }
+    },
+    "screening": {
+      "covid_caught": 158,
+      "covid_patients": 169,
+      "false_alarms": 38,
+      "other_patients": 136
+    }
+  }
+}

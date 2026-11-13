@@ -1,0 +1,29 @@
+# Runs the code style check and the automatic tests on GitHub at every push to main and on pull requests
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # The CPU-only version of PyTorch is much smaller, which keeps the run fast
+      - name: Install
+        run: |
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+
+      - name: Check code style
+        run: ruff check src tests
+
+      - name: Run the tests
+        run: pytest

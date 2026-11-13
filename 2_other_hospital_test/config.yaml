@@ -1,0 +1,22 @@
+# Step 2: does the baseline still work in another hospital? Nothing is trained here.
+# The baseline model from Step 1 (trained on Wuhan slices) is tested on the 305 Tehran patients. None of them were
+# seen in training, and they come from another hospital, other scanners and another country.
+# Its COVID score for a slice = its probability of the class pCT.
+
+name: other_hospital_test
+model_dir: 1_reproduce_baseline/results
+dataset: 0_data/processed/ctmd/index.csv
+output_dir: 2_other_hospital_test/results
+
+tests:
+
+  # All 305 patients.
+  # Per slice: COVID-infected slices vs. every other labelled slice.
+  # Per patient: COVID vs. healthy, and COVID vs. pneumonia, using each patient's most suspicious slices
+  - name: all_patients
+
+  # Only slices showing an infection: can the model tell a COVID lesion from a pneumonia lesion?
+  # Per-patient results are skipped, because only part of each patient's slices is used
+  - name: covid_vs_pneumonia_lesions
+    query: "label in ['covid', 'cap']"
+    per_patient: false

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COVID-19 CT, honestly</title>
+    <meta name="description" content="A COVID-19 CT classifier that reports 99% accuracy, checked on patients it has never seen. An interactive demo of an honest model." />
+    <meta name="theme-color" content="#FAF9F6" />
+    <link rel="canonical" href="https://zakyikow.github.io/covid_ct_diagnosis/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2" />
+
+    <!-- The preview shown when the link is shared (LinkedIn, Slack, X, messages) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://zakyikow.github.io/covid_ct_diagnosis/" />
+    <meta property="og:title" content="Can a 99% COVID-19 detector hold up?" />
+    <meta property="og:description" content="96% when slices are shuffled, 77% when patients are kept apart. Watch an honest model read real CT scans." />
+    <meta property="og:image" content="https://zakyikow.github.io/covid_ct_diagnosis/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A chest CT slice with the model's heatmap, next to the scores 96%, 77% and 84%" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>This page needs JavaScript to show the demo.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

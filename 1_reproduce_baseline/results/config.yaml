@@ -1,0 +1,37 @@
+name: baseline
+seed: 42
+output_dir: 1_reproduce_baseline/results
+data:
+  index: 0_data/processed/ictcf/index.csv
+  split: random
+  fractions:
+  - 0.7
+  - 0.15
+  - 0.15
+  img_size: 224
+classes:
+- nCT
+- NiCT
+- pCT
+positive_class: pCT
+model:
+  pretrained: true
+  drop_rate: 0.2
+augment:
+  crop_scale_min: 0.75
+  hflip: 0.5
+  rotate: 10
+  brightness: 0.2
+  contrast: 0.2
+train:
+  epochs: 10
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.05
+  label_smoothing: 0.0
+  class_weight_power: 0.5
+  patience: 4
+  num_workers: 4
+  device: auto
+eval:
+  target_sensitivity: 0.95
