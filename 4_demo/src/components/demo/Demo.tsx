@@ -5,8 +5,7 @@ import { SectionLabel } from "@/components/SectionLabel"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { dataUrl, loadJson, type Patient, type PatientSummary } from "@/lib/data"
-import { FIRST_PATIENT } from "@/lib/labels"
-import { scrollIntoSight, scrollToCentre, useArrival, useFinePointer, useSeenOnce } from "@/lib/navigation"
+import { isTravelling, scrollIntoSight, scrollToCentre, useArrival, useFinePointer, useSeenOnce } from "@/lib/navigation"
 import { cn } from "@/lib/utils"
 import { DiagnosisPanel } from "./DiagnosisPanel"
 import { ModelPipeline } from "./ModelPipeline"
@@ -59,16 +58,7 @@ export function Demo({ patients }: { patients: PatientSummary[] | null }) {
   const { arrivals, isLit } = useArrival("demo")
   const viewerRef = useRef<HTMLDivElement>(null)
   const readingRef = useRef<HTMLDivElement>(null)
-  const [watchViewer, seen] = useSeenOnce<HTMLDivElement>(0.5)
-
-  // The viewer is both measured (drops, scrolling) and watched (the first patient plays once it is half on screen)
-  const setViewer = useCallback(
-    (element: HTMLDivElement | null) => {
-      viewerRef.current = element
-      watchViewer(element)
-    },
-    [watchViewer],
-  )
+  const [watchCards, seen] = useSeenOnce<HTMLDivElement>(0.95)
 
   const [selected, setSelected] = useState<string | null>(null)
   const [run, setRun] = useState(0)
@@ -80,6 +70,8 @@ export function Demo({ patients }: { patients: PatientSummary[] | null }) {
   const [dragging, setDragging] = useState<string | null>(null)
   const [isOver, setIsOver] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [invited, setInvited] = useState(false)
+  const [invites, setInvites] = useState(0)
 
   // Start reading a patient's scan. Picking the same patient again replays it
   const read = useCallback((id: string) => {
@@ -88,12 +80,16 @@ export function Demo({ patients }: { patients: PatientSummary[] | null }) {
     setRun((r) => r + 1)
   }, [])
 
-  // The first time the viewer comes into view and nothing is picked yet, the first patient plays by itself
+  // The first time the whole row of cards is on screen, they wave and the hint lights up, inviting a first pick
+  // (skipped when the visitor came from a link, which already makes them wave)
   useEffect(() => {
-    if (!seen || selected !== null || !patients) return
-    const timer = window.setTimeout(() => read(FIRST_PATIENT), 500)
+    if (!seen || isLit || isTravelling()) return
+    setInvites(1)
+    setInvited(true)
+    const timer = window.setTimeout(() => setInvited(false), 1800)
     return () => window.clearTimeout(timer)
-  }, [seen, selected, patients, read])
+    // isLit is read, not watched: the end of an arrival's highlight must not start an invitation
+  }, [seen])
 
   // One run: load the patient, load its images, then replay the scan bar by bar (or show the result at once)
   useEffect(() => {
@@ -202,21 +198,23 @@ export function Demo({ patients }: { patients: PatientSummary[] | null }) {
             Pick a patient
           </StepHeading>
           <p className="m-0 pl-9 text-[13px] text-muted md:pl-0 md:text-sm">
-            <span className={cn("rounded-full px-2.5 py-1 transition-colors duration-500", isLit && "bg-soft text-ink")}>
+            <span className={cn("rounded-full px-2.5 py-1 transition-colors duration-500", (isLit || (invited && selected === null)) && "bg-soft text-ink")}>
               {canDrag ? "Drag a scan into the viewer, or click it" : "Tap a scan"}
             </span>
           </p>
         </div>
         {patients ? (
-          <PatientPicker
-            patients={patients}
-            selected={selected}
-            dragging={dragging}
-            canDrag={canDrag}
-            waveKey={reduceMotion ? 0 : arrivals}
-            onPick={pick}
-            drag={drag}
-          />
+          <div ref={watchCards}>
+            <PatientPicker
+              patients={patients}
+              selected={selected}
+              dragging={dragging}
+              canDrag={canDrag}
+              waveKey={reduceMotion ? 0 : arrivals + invites}
+              onPick={pick}
+              drag={drag}
+            />
+          </div>
         ) : (
           <div className="h-40 animate-pulse rounded-2xl bg-soft" />
         )}
@@ -242,7 +240,7 @@ export function Demo({ patients }: { patients: PatientSummary[] | null }) {
         >
           <div className="order-1 min-w-0 md:col-start-1 md:row-span-4 md:row-start-1">
             <ScanViewer
-              ref={setViewer}
+              ref={viewerRef}
               patient={patient}
               phase={phase}
               step={step}

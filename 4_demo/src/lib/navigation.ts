@@ -7,6 +7,12 @@ export type SectionId = (typeof SECTION_IDS)[number]
 const ARRIVAL_EVENT = "section-arrival"
 const ARRIVAL_SHOWN_MS = 1500
 
+// True while the page scrolls itself to a section after a click on a link
+let travelling = false
+export function isTravelling(): boolean {
+  return travelling
+}
+
 // True when the visitor asked the system for less motion
 function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -18,6 +24,7 @@ export function goToSection(event: MouseEvent<HTMLAnchorElement>, id: SectionId)
   if (!section) return
   event.preventDefault()
   history.replaceState(null, "", `#${id}`)
+  travelling = true
   section.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" })
 
   // Light the section up once the scroll has finished (or after 0.7 s on browsers without a scrollend event)
@@ -25,6 +32,7 @@ export function goToSection(event: MouseEvent<HTMLAnchorElement>, id: SectionId)
   const announce = () => {
     if (announced) return
     announced = true
+    travelling = false
     window.removeEventListener("scrollend", announce)
     section.querySelector<HTMLElement>("[data-section-title]")?.focus({ preventScroll: true })
     window.dispatchEvent(new CustomEvent(ARRIVAL_EVENT, { detail: id }))

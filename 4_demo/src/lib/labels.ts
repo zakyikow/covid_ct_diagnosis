@@ -21,8 +21,5 @@ export const PATIENT_TAGS: Record<string, string> = {
   P021: "Hard case",
 }
 
-// The patient that plays by itself the first time the scan viewer comes into view
-export const FIRST_PATIENT = "P002"
-
 // Address of the code
 export const REPO_URL = "https://github.com/zakyikow/covid_ct_diagnosis"
